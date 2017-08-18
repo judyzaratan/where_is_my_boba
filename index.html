@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <title>Boba Map</title>
     <style>
-    #map {
-      height: 100%;
-    }
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
+    }
+    #map{
+      height: 50%;
     }
 
     </style>
@@ -18,10 +18,12 @@
   <body>
 
     <!-- Folders -->
+    <div class="">
+      <ul class="folders" data-bind="foreach: markers">
+        <li data-bind="text: $data.title, click: $parent.populateInfoWindow"></li>
+      </ul>
 
-    <ul class="folders" data-bind="foreach: markers">
-      <li data-bind="text: $data.title, click: $parent.populateInfoWindow"></li>
-    </ul>
+    </div>
     <div id="map">
 
     </div>
