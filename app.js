@@ -59,7 +59,17 @@ function initMap() {
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
     this.largeInfowindow = new google.maps.InfoWindow();
-
+    this.query = ko.observable('');
+    this.filteredSearch = ko.computed(function(){
+      var filter = self.query().toLowerCase();
+      if(!filter){
+        return self.markers();
+      } else {
+        return ko.utils.arrayFilter(self.markers(), function(item){
+          return item.title.toLowerCase().indexOf(filter) !== -1;
+        });
+      }
+    });
     var bounds = new google.maps.LatLngBounds();
 
     // The following group uses the location array to create an array of markers on initialize.
@@ -117,9 +127,13 @@ function initMap() {
         }
     }
     // Extend the boundaries of the map for each marker
+    this.query.subscribe(this.search);
   };
   ko.applyBindings(new AppViewModel());
+  // AppViewModel.query.subscribe(AppViewModel.search);
+
 };
+
 
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
