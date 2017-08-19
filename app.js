@@ -78,9 +78,10 @@ function initMap() {
     // Create a new blank array for all the listing markers.
     this.markers = ko.observableArray([]);
     this.currentMarker = ko.observable();
+    var bounds = new google.maps.LatLngBounds();
+    this.largeInfowindow = new google.maps.InfoWindow();
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
-    this.largeInfowindow = new google.maps.InfoWindow();
     this.query = ko.observable("");
     this.filteredSearch = ko.computed(function() {
       var filter = self.query();
@@ -98,7 +99,6 @@ function initMap() {
       }
 
     });
-    var bounds = new google.maps.LatLngBounds();
 
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
@@ -137,6 +137,7 @@ function initMap() {
         self.largeInfowindow.open(map, pin.marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         self.largeInfowindow.addListener('closeclick', function() {
+          self.largeInfowindow.marker.setAnimation(null);
           self.largeInfowindow.setMarker = null;
         });
       }
