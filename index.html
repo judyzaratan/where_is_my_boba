@@ -30,7 +30,7 @@
 <div id="wrapper">
   <div id="map"></div>
   <div id="list">
-    <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'keyup'" autocomplete="off">
+    <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
     <ul data-bind="template: {name: 'place',foreach: filteredSearch}">
     </ul>
   </div>

@@ -51,7 +51,7 @@ function initMap() {
     var thisMarker = this;
     this.title = title;
     this.position = position;
-    this.isVisible = ko.observable(false);
+    this.isVisible = ko.observable(true);
     this.marker = new google.maps.Marker({
       map: map,
       position: position,
@@ -61,18 +61,15 @@ function initMap() {
       visible: true
     });
 
-
-
     this.isVisible.subscribe(function(currentState) {
       console.log('currentState', currentState)
-      console.log('thisMarker', thisMarker.title)
+      console.log('thisMarker', thisMarker)
       if (currentState) {
         thisMarker.marker.setMap(map);
       } else {
         thisMarker.marker.setMap(null);
       }
     });
-
   };
 
 
@@ -89,14 +86,17 @@ function initMap() {
     this.largeInfowindow = new google.maps.InfoWindow();
     this.query = ko.observable("");
     this.filteredSearch = ko.computed(function() {
-      var filter = self.query().toLowerCase();
+      var filter = self.query();
       if (!filter) {
+        self.markers().forEach(function(item){
+          item.isVisible(true);
+        });
         return self.markers();
       } else {
         console.log('filter', filter);
         return ko.utils.arrayFilter(self.markers(), function(pin) {
-          console.dir('pin', pin);
-          var doesMatch = pin.title.toLowerCase().indexOf(filter) >= 0;
+          console.log('pin', pin);
+          var doesMatch = pin.title.toLowerCase().indexOf(filter.toLowerCase()) > -1;
           pin.isVisible(doesMatch);
           return doesMatch;
         });
