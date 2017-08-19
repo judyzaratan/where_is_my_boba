@@ -45,7 +45,6 @@ function initMap() {
     zoom: 14
   });
   var self = this;
-  self.test = 'test';
 
   var Pin = function(i, map, title, position, view) {
     var thisMarker = this;
@@ -62,8 +61,6 @@ function initMap() {
     });
 
     this.isVisible.subscribe(function(currentState) {
-      console.log('currentState', currentState)
-      console.log('thisMarker', thisMarker)
       if (currentState) {
         thisMarker.marker.setMap(map);
       } else {
@@ -93,9 +90,7 @@ function initMap() {
         });
         return self.markers();
       } else {
-        console.log('filter', filter);
         return ko.utils.arrayFilter(self.markers(), function(pin) {
-          console.log('pin', pin);
           var doesMatch = pin.title.toLowerCase().indexOf(filter.toLowerCase()) > -1;
           pin.isVisible(doesMatch);
           return doesMatch;
@@ -114,19 +109,13 @@ function initMap() {
 
       // Push the marker to our array of markers.
       this.markers().push(pin);
-      // pin.marker.addListener('click', function(e) {
-      //   console.log('e', e)
-      //   console.log(this);
-      //   populateInfoWindow(this);
-      // });
+
       (function(pinIn) {
         google.maps.event.addListener(pin.marker, 'click', function () {
-          console.log('pin should pop up');
           self.populateInfoWindow( pinIn,pin.marker);
         });
       })(pin);
       this.currentMarker(this.markers()[0]);
-      console.log(this.currentMarker().isVisible);
       // Create an onclick event to open an infowindow at each marker.
 
       bounds.extend(this.markers()[i].position);
@@ -137,9 +126,7 @@ function initMap() {
     //Behavior
     this.populateInfoWindow = function(pin, marker) {
       // Check to make sure the infowindow is not already opened on this marker.
-      console.log('currentMarker', self.currentMarker());
       if (self.currentMarker() !== pin) {
-        console.log('stop bouncing')
         self.currentMarker().marker.setAnimation(null);
         self.currentMarker(pin);
       }
@@ -168,9 +155,3 @@ function initMap() {
   // AppViewModel.query.subscribe(AppViewModel.search);
 
 };
-
-
-
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
