@@ -35,6 +35,54 @@ var locations = [{
   }
 ];
 
+
+CLIENT_ID = "1moGT5Uh3-1kYaacZ2c_Ng"
+CLIENT_SECRET = "4yhekO3Wc90KHpBAbb2LmvaP5OfUKZQnmL8WF2oKuYT7mYNg3LZZNzImNJxYLwFb"
+var call  = function(data){
+  console.log(data);
+}
+
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://api.yelp.com/oauth2/token",
+  "method": "POST",
+  "headers": {
+    "content-type": 'application/x-www-form-urlencoded'
+  },
+  "data": {
+    "client_id": "1moGT5Uh3-1kYaacZ2c_Ng",
+    "client_secret": "4yhekO3Wc90KHpBAbb2LmvaP5OfUKZQnmL8WF2oKuYT7mYNg3LZZNzImNJxYLwFb",
+    "grant_type": "client_credentials"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log('done');
+  console.log(response);
+});
+
+
+// $.ajax({
+//   method: "POST",
+//   // dataType: "jsonp",
+//   // jsonp: 'callback',
+//   // jsonpCallback: 'call',
+//   // async: false,
+//   cache: true,
+//   url: "https://api.yelp.com/oauth2/token",
+//   data: {
+//     client_id: CLIENT_ID,
+//     client_secret: CLIENT_SECRET,
+//     grant_type: "client_credentials"
+//   },
+//   headers: {
+//                 'Content-type': 'application/x-www-form-urlencoded'
+//             },
+//   success: function(data, textStats, XMLHttpRequest){
+//     console.log(data);
+//   }
+// });
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   var map = new google.maps.Map(document.getElementById('map'), {
