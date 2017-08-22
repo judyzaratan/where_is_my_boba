@@ -36,53 +36,6 @@ var locations = [{
 ];
 
 
-CLIENT_ID = "1moGT5Uh3-1kYaacZ2c_Ng"
-CLIENT_SECRET = "4yhekO3Wc90KHpBAbb2LmvaP5OfUKZQnmL8WF2oKuYT7mYNg3LZZNzImNJxYLwFb"
-var call  = function(data){
-  console.log(data);
-}
-
-var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "https://api.yelp.com/oauth2/token",
-  "method": "POST",
-  "headers": {
-    "content-type": 'application/x-www-form-urlencoded'
-  },
-  "data": {
-    "client_id": "1moGT5Uh3-1kYaacZ2c_Ng",
-    "client_secret": "4yhekO3Wc90KHpBAbb2LmvaP5OfUKZQnmL8WF2oKuYT7mYNg3LZZNzImNJxYLwFb",
-    "grant_type": "client_credentials"
-  }
-}
-
-$.ajax(settings).done(function (response) {
-  console.log('done');
-  console.log(response);
-});
-
-
-// $.ajax({
-//   method: "POST",
-//   // dataType: "jsonp",
-//   // jsonp: 'callback',
-//   // jsonpCallback: 'call',
-//   // async: false,
-//   cache: true,
-//   url: "https://api.yelp.com/oauth2/token",
-//   data: {
-//     client_id: CLIENT_ID,
-//     client_secret: CLIENT_SECRET,
-//     grant_type: "client_credentials"
-//   },
-//   headers: {
-//                 'Content-type': 'application/x-www-form-urlencoded'
-//             },
-//   success: function(data, textStats, XMLHttpRequest){
-//     console.log(data);
-//   }
-// });
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -173,6 +126,12 @@ function initMap() {
 
     //Behavior
     this.populateInfoWindow = function(pin, marker) {
+
+
+
+
+
+
       // Check to make sure the infowindow is not already opened on this marker.
       if (self.currentMarker() !== pin) {
         self.currentMarker().marker.setAnimation(null);
@@ -181,8 +140,42 @@ function initMap() {
       self.currentMarker().marker.setAnimation(google.maps.Animation.BOUNCE);
       if (self.largeInfowindow.marker != pin.marker) {
         self.largeInfowindow.marker = pin.marker;
-        self.largeInfowindow.setContent('<div>' + pin.title + '</div>');
-        self.largeInfowindow.open(map, pin.marker);
+        var settings1 = {
+          "url": "https://api.foursquare.com/v2/venues/search",
+          "method": "GET",
+          "data":{
+            ll:pin.position.lat + "," + pin.position.lng,
+            query: pin.title,
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            v: 20161016,
+            limit: 1
+          }
+        };
+        var information;
+        $.ajax(settings1, function(){
+          alert('done2');
+        }).done(function (response) {
+          console.log('done');
+          console.log(response);
+          information = {
+            name: response.response.venues[0].name,
+            address: response.response.venues[0].location.formattedAddress,
+            website: response.response.venues[0].url
+          }
+          var html = '<div>' +
+            '<p>' + information.name + '</p>' +
+            '<p>' +information.address + '</p>' +
+            '<p>' +information.website+ '</p>' + '</div>';
+
+
+
+
+          self.largeInfowindow.setContent(html);
+          self.largeInfowindow.open(map, pin.marker);
+          console.log(information);
+        });
+        console.log(information);
         // Make sure the marker property is cleared if the infowindow is closed.
         self.largeInfowindow.addListener('closeclick', function() {
           self.largeInfowindow.marker.setAnimation(null);
