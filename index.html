@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name=viewport content="width=device-width, initial-scale=1.0">
   <title>Boba Map</title>
   <style>
   html,
@@ -11,6 +12,10 @@
     height: 100%;
     margin: 0;
     padding: 0;
+  }
+  input {
+    min-width: 48px;
+    min-height: 48px;
   }
   #list{
     z-index: 99;
@@ -21,6 +26,7 @@
   }
   #map {
     height: 100%;
+    max-width: 100%;
   }
   </style>
 </head>
@@ -28,12 +34,13 @@
 <body>
 
 <div id="wrapper">
+
   <div id="map"></div>
-  <div id="list">
+  <!-- <div id="list">
     <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
     <ul data-bind="template: {name: 'place',foreach: filteredSearch}">
     </ul>
-  </div>
+  </div> -->
 
 </div>
 

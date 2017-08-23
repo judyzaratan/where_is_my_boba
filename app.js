@@ -126,12 +126,6 @@ function initMap() {
 
     //Behavior
     this.populateInfoWindow = function(pin, marker) {
-
-
-
-
-
-
       // Check to make sure the infowindow is not already opened on this marker.
       if (self.currentMarker() !== pin) {
         self.currentMarker().marker.setAnimation(null);
@@ -140,6 +134,9 @@ function initMap() {
       self.currentMarker().marker.setAnimation(google.maps.Animation.BOUNCE);
       if (self.largeInfowindow.marker != pin.marker) {
         self.largeInfowindow.marker = pin.marker;
+        var CLIENT_ID = "IJ4ZSXNUB5KE4R4JA44HHGEZLIY14RQSRTTINKCQERGC1K0H";
+        var CLIENT_SECRET = "XBDJ5CCCAOD4Z0Y1RORM1HXUVNMCWGO5ZYGBVKQGZ5EFMIJI";
+
         var settings1 = {
           "url": "https://api.foursquare.com/v2/venues/search",
           "method": "GET",
@@ -148,10 +145,11 @@ function initMap() {
             query: pin.title,
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
-            v: 20161016,
+            v: 20151016,
             limit: 1
           }
         };
+
         var information;
         $.ajax(settings1, function(){
           alert('done2');
@@ -166,9 +164,10 @@ function initMap() {
           var html = '<div>' +
             '<p>' + information.name + '</p>' +
             '<p>' +information.address + '</p>' +
-            '<p>' +information.website+ '</p>' + '</div>';
+            '<p>' +information.website+ '</p>' +
+           '</div>';
 
-
+            console.log(html);
 
 
           self.largeInfowindow.setContent(html);
