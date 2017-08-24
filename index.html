@@ -8,39 +8,77 @@
   <style>
   html,
   body, #wrapper {
-    font-family: Arial, sans-serif;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    width: 100%;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    overflow: hidden;
+    position: relative;
+  }
+  ul{
+    list-style: none;
+  }
+  h1 {
+    width: 100%;
   }
   input {
+    background-color: pink;
     min-width: 48px;
     min-height: 48px;
+    width: 100%;
   }
   #list{
-    z-index: 99;
+    width: 30%;
+    margin: 30%;
     position: absolute;
-    top: 100px;
-    left: 100px;
     background-color: white;
+    opacity: 0.5;
   }
   #map {
     height: 100%;
     max-width: 100%;
+    position: absolute;
+    width: 100%;
   }
+
+@media screen and (min-width: 601px){
+  #list a.icon {
+    display: none;
+  }
+}
+
+
+  @media screen and (max-width: 600px) {
+  #myfilters {
+    display: none;
+  }
+
+  #list a.icon {
+    color: red;
+  }
+}
+
+
+@media screen and (max-width: 600px) {
+  #myfilters.responsive {
+    display: block;
+  }
+}
   </style>
 </head>
 
 <body>
-
+<h1>San Francisco Boba</h1>
 <div id="wrapper">
-
   <div id="map"></div>
-  <!-- <div id="list">
-    <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
-    <ul data-bind="template: {name: 'place',foreach: filteredSearch}">
-    </ul>
-  </div> -->
+  <div id="list">
+    <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">Filter Search</a>
+    <div id="myfilters" class="filters">
+      <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
+      <ul data-bind="template: {name: 'place',foreach: filteredSearch}">
+      </ul>
+    </div>
+  </div>
 
 </div>
 

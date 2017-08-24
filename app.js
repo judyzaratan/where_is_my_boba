@@ -34,8 +34,17 @@ var locations = [{
     }
   }
 ];
+function myFunction(){
+  var x = document.getElementById("myfilters");
+  if (x.className === "filters") {
+      x.className += " responsive";
+  } else {
+      x.className = "filters";
+  }
 
 
+
+};
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   var map = new google.maps.Map(document.getElementById('map'), {
