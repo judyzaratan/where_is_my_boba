@@ -34,17 +34,19 @@ var locations = [{
     }
   }
 ];
-function myFunction(){
+
+function myFunction() {
   var x = document.getElementById("myfilters");
   if (x.className === "filters") {
-      x.className += " responsive";
+    x.className += " responsive";
   } else {
-      x.className = "filters";
+    x.className = "filters";
   }
 
 
 
 };
+
 function initMap() {
   // Constructor creates a new map - only center and zoom are required.
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -52,7 +54,7 @@ function initMap() {
       lat: 37.764245,
       lng: -122.423661
     },
-    zoom: 14
+    zoom: 10
   });
   var self = this;
 
@@ -96,7 +98,7 @@ function initMap() {
     this.filteredSearch = ko.computed(function() {
       var filter = self.query();
       if (!filter) {
-        self.markers().forEach(function(item){
+        self.markers().forEach(function(item) {
           item.isVisible(true);
         });
         return self.markers();
@@ -121,8 +123,8 @@ function initMap() {
       this.markers().push(pin);
 
       (function(pinIn) {
-        google.maps.event.addListener(pin.marker, 'click', function () {
-          self.populateInfoWindow( pinIn,pin.marker);
+        google.maps.event.addListener(pin.marker, 'click', function() {
+          self.populateInfoWindow(pinIn, pin.marker);
         });
       })(pin);
       this.currentMarker(this.markers()[0]);
@@ -149,8 +151,8 @@ function initMap() {
         var settings1 = {
           "url": "https://api.foursquare.com/v2/venues/search",
           "method": "GET",
-          "data":{
-            ll:pin.position.lat + "," + pin.position.lng,
+          "data": {
+            ll: pin.position.lat + "," + pin.position.lng,
             query: pin.title,
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
@@ -160,11 +162,9 @@ function initMap() {
         };
 
         var information;
-        $.ajax(settings1, function(){
+        $.ajax(settings1, function() {
           alert('done2');
-        }).done(function (response) {
-          console.log('done');
-          console.log(response);
+        }).done(function(response) {
           information = {
             name: response.response.venues[0].name,
             address: response.response.venues[0].location.formattedAddress,
@@ -172,18 +172,16 @@ function initMap() {
           }
           var html = '<div>' +
             '<p>' + information.name + '</p>' +
-            '<p>' +information.address + '</p>' +
-            '<p>' +information.website+ '</p>' +
-           '</div>';
+            '<p>' + information.address[0] + '</p>' +
+            '<p>' + information.address[1] + '</p>' +
+            '<p>' + information.website + '</p>' +
+            '</div>';
 
-            console.log(html);
 
 
           self.largeInfowindow.setContent(html);
           self.largeInfowindow.open(map, pin.marker);
-          console.log(information);
         });
-        console.log(information);
         // Make sure the marker property is cleared if the infowindow is closed.
         self.largeInfowindow.addListener('closeclick', function() {
           self.largeInfowindow.marker.setAnimation(null);
