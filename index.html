@@ -4,78 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale=1">
+  <link rel="stylesheet" href="css/styles.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <title>Boba Map</title>
-  <style>
-    html,
-    body, #wrapper {
-      height: 100%;
-      width: 100%;
-      padding: 0 0 0 0;
-      margin: 0 0 0 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    h1 {
-      width: 100%;
-    }
-
-    input {
-      background-color: pink;
-      min-width: 48px;
-      min-height: 48px;
-      width: 100%;
-    }
-
-    #list {
-      width: 30%;
-      margin-top: 20%;
-      position: absolute;
-      background-color: white;
-      z-index:99;
-    }
-
-    #map {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-    }
-
-    @media screen and (min-width: 601px) {
-      #list a.icon {
-        display: none;
-      }
-    }
-
-
-    @media screen and (max-width: 600px) {
-      #myfilters {
-        display: none;
-      }
-
-      #list a.icon {
-        color: red;
-      }
-    }
-
-
-    @media screen and (max-width: 600px) {
-      #myfilters.responsive {
-        display: block;
-      }
-    }
-  </style>
 </head>
 
 <body>
+    <h1>Boba Map</h1>
+
   <div id="wrapper">
     <div id="list">
-
       <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()"><i class="fa fa-search" aria-hidden="true"></i>Filter Search</a>
       <div id="myfilters" class="filters">
         <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
@@ -95,7 +33,7 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdQUoRxP44RAWdfyuHNk3qy5mwAuvOo8I&callback=initMap" async defer></script>
 
-  <script src="app.js">
+  <script src="js/app.js">
   </script>
 </body>
 
