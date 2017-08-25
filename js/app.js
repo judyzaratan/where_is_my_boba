@@ -1,3 +1,7 @@
+/*
+  Milk Tea Locations Array
+*/
+
 var locations = [{
     title: "i-Tea",
     location: {
@@ -35,17 +39,9 @@ var locations = [{
   }
 ];
 
-function myFunction() {
-  var x = document.getElementById("myfilters");
-  if (x.className === "filters") {
-    x.className += " responsive";
-  } else {
-    x.className = "filters";
-  }
-}
-
-
-//Model
+/*
+  Pin object - contains model/information for individual location
+*/
 var Pin = function(i, map, title, position, view) {
   var thisMarker = this;
   this.title = title;
@@ -60,6 +56,10 @@ var Pin = function(i, map, title, position, view) {
     visible: true
   });
 
+  /*
+    Subscription on isVisible parameter
+    Applies/Removes marker on map
+  */
   this.isVisible.subscribe(function(currentState) {
     if (currentState) {
       thisMarker.marker.setMap(map);
@@ -71,7 +71,9 @@ var Pin = function(i, map, title, position, view) {
 };
 
 
-//View
+/*
+  View Model for Knockout
+*/
 function AppViewModel(map, markers) {
 
   var self = this;
@@ -80,17 +82,21 @@ function AppViewModel(map, markers) {
   this.currentMarker = ko.observable(this.markers()[0]);
   this.query = ko.observable("");
 
-  // Behavior : Filter locations based on query string
+  /*
+    Behavior: Filter locations based on query string
+  */
   this.filteredSearch = ko.computed(function() {
     var filter = self.query();
+
+    // Display all markers if no filter string
     if (!filter) {
       self.markers().forEach(function(item) {
         item.isVisible(true);
       });
-      // Return original markers if no query needed
       return self.markers();
+
+    // Return array of locations that matches string query
     } else {
-      // Return an array that matches string query
       return ko.utils.arrayFilter(self.markers(), function(pin) {
         var doesMatch = pin.title.toLowerCase().indexOf(filter.toLowerCase()) > -1;
         pin.isVisible(doesMatch);
@@ -100,7 +106,9 @@ function AppViewModel(map, markers) {
   });
 
 
-  // Create an onclick event to open an infowindow at each marker.
+  /*
+    Add a click event listener when marker is clicked
+  */
   this.markers().forEach(function(item, i) {
     google.maps.event.addListener(item.marker, "click", function() {
       self.populateInfoWindow(item);
@@ -108,20 +116,30 @@ function AppViewModel(map, markers) {
   });
 
 
+  /*
+    Receives marker info from Foursquare API and displays on InfoWindow
+  */
   this.showMarkerInfo = function(data) {
+    if(!data) {
+      var html = "<p class='error'>"+"Cannot load data from Foursquare"+"</p>";
+    } else {
+
     var html = "<div id='iwindow'>" +
       "<p>" + data.name + "</p>" +
       "<p>" + data.address[0] + "</p>" +
       "<p>" + data.address[1] + "</p>" +
       "<p>" + data.website + "</p>" +
       "</div>";
+    }
 
     self.largeInfowindow.setContent(html);
     map.setCenter(this.currentMarker().position);
     self.largeInfowindow.open(map, this.currentMarker().marker);
   };
 
-
+  /*
+    Gets FourSquare information via AJAX
+  */
   this.getMarkerInfo = function(pin) {
     var CLIENT_ID = "IJ4ZSXNUB5KE4R4JA44HHGEZLIY14RQSRTTINKCQERGC1K0H";
     var CLIENT_SECRET = "XBDJ5CCCAOD4Z0Y1RORM1HXUVNMCWGO5ZYGBVKQGZ5EFMIJI";
@@ -139,17 +157,26 @@ function AppViewModel(map, markers) {
       }
     };
 
-    $.ajax(settings).done(function(response) {
-      var information = {
-        name: response.response.venues[0].name,
-        address: response.response.venues[0].location.formattedAddress,
-        website: response.response.venues[0].url
-      }
-      self.showMarkerInfo(information);
-    });
-  };
+    /*
+      AJAX request to FourSquare
+    */
+    $.ajax(settings)
+      .done(function(response) {
+        var information = {
+          name: response.response.venues[0].name,
+          address: response.response.venues[0].location.formattedAddress,
+          website: response.response.venues[0].url
+        }
+        self.showMarkerInfo(information);
+    })
+      .fail(function(){
+        self.showMarkerInfo();
+      });
+  }; 
 
-
+  /*
+    Initiates populating infowindow
+  */
   this.populateInfoWindow = function(pin) {
     $('#myfilters').removeClass('responsive');
     if (pin !== self.currentMarker()) {
@@ -167,9 +194,14 @@ function AppViewModel(map, markers) {
 };
 
 
-// Callback after accessing Google Maps API
+/*
+  Callback after accessing Google Maps API
+*/
 function initMap() {
-  // Constructor creates a new map - only center and zoom are required.
+
+  /*
+    Set map information
+  */
   var bounds = new google.maps.LatLngBounds();
   var markers = [];
   var map = new google.maps.Map(document.getElementById("map"), {
@@ -183,7 +215,7 @@ function initMap() {
   });
 
 
-  // The following group uses the location array to create an array of markers on initialize.
+  // Uses location array to create an array of Pin objects on initialize.
   locations.forEach(function(item, i) {
     // Get the position from the location array.
     var position = item.location;
@@ -198,5 +230,11 @@ function initMap() {
     markers.push(pin);
   });
 
+  // Activate KO with view model
   ko.applyBindings(new AppViewModel(map, markers));
 };
+
+// Executes with Google API has retrieval error
+var googleError = function(){
+  $('body').html("ERROR LOADING MAPS");
+}
