@@ -120,18 +120,18 @@ function AppViewModel(map, markers) {
     Receives marker info from Foursquare API and displays on InfoWindow
   */
   this.showMarkerInfo = function(data) {
+    var html = "";
     if(!data) {
-      var html = "<p class='error'>"+"Cannot load data from Foursquare"+"</p>";
+      html = "<p class='error'>"+"Cannot load data from Foursquare"+"</p>";
     } else {
 
-    var html = "<div id='iwindow'>" +
-      "<p>" + data.name + "</p>" +
-      "<p>" + data.address[0] + "</p>" +
-      "<p>" + data.address[1] + "</p>" +
-      "<p>" + data.website + "</p>" +
-      "</div>";
+      html = "<div id='iwindow'>" +
+        "<p>" + data.name + "</p>" +
+        "<p>" + data.address[0] + "</p>" +
+        "<p>" + data.address[1] + "</p>" +
+        "<p>" + data.website + "</p>" +
+        "</div>";
     }
-
     self.largeInfowindow.setContent(html);
     map.setCenter(this.currentMarker().position);
     self.largeInfowindow.open(map, this.currentMarker().marker);
@@ -166,13 +166,13 @@ function AppViewModel(map, markers) {
           name: response.response.venues[0].name,
           address: response.response.venues[0].location.formattedAddress,
           website: response.response.venues[0].url
-        }
+        };
         self.showMarkerInfo(information);
     })
       .fail(function(){
         self.showMarkerInfo();
       });
-  }; 
+  };
 
   /*
     Initiates populating infowindow
@@ -191,7 +191,7 @@ function AppViewModel(map, markers) {
       pin.marker.setAnimation(null);
     });
   };
-};
+}
 
 
 /*
@@ -232,9 +232,9 @@ function initMap() {
 
   // Activate KO with view model
   ko.applyBindings(new AppViewModel(map, markers));
-};
+}
 
 // Executes with Google API has retrieval error
 var googleError = function(){
   $('body').html("ERROR LOADING MAPS");
-}
+};
