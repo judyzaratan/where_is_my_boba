@@ -81,6 +81,7 @@ function AppViewModel(map, markers) {
   this.markers = ko.observableArray(markers);
   this.currentMarker = ko.observable(this.markers()[0]);
   this.query = ko.observable("");
+  this.isActive = ko.observable(false);
 
   /*
     Behavior: Filter locations based on query string
@@ -115,6 +116,11 @@ function AppViewModel(map, markers) {
     });
   });
 
+  this.toggleFilter = function(data, event){
+    console.log(data);  
+    data.isActive(!data.isActive());
+  }
+
 
   /*
     Receives marker info from Foursquare API and displays on InfoWindow
@@ -130,7 +136,8 @@ function AppViewModel(map, markers) {
         "<p>" + data.address[0] + "</p>" +
         "<p>" + data.address[1] + "</p>" +
         "<p>" + data.website + "</p>" +
-        "</div>";
+        "</div>" +
+        "<div>Information obtained from FourSquare </div>";
     }
     self.largeInfowindow.setContent(html);
     map.setCenter(this.currentMarker().position);
@@ -141,6 +148,7 @@ function AppViewModel(map, markers) {
     Gets FourSquare information via AJAX
   */
   this.getMarkerInfo = function(pin) {
+    console.log(pin);
     var CLIENT_ID = "IJ4ZSXNUB5KE4R4JA44HHGEZLIY14RQSRTTINKCQERGC1K0H";
     var CLIENT_SECRET = "XBDJ5CCCAOD4Z0Y1RORM1HXUVNMCWGO5ZYGBVKQGZ5EFMIJI";
 
@@ -163,9 +171,9 @@ function AppViewModel(map, markers) {
     $.ajax(settings)
       .done(function(response) {
         var information = {
-          name: response.response.venues[0].name,
-          address: response.response.venues[0].location.formattedAddress,
-          website: response.response.venues[0].url
+          name: response.response.venues[0].name || 'No Name Provided',
+          address: response.response.venues[0].location.formattedAddress || 'No Address Provided',
+          website: response.response.venues[0].url || 'No URL Provided'
         };
         self.showMarkerInfo(information);
     })

@@ -14,8 +14,8 @@
 
   <div id="wrapper">
     <div id="list">
-      <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()"><i class="fa fa-search" aria-hidden="true"></i>Filter Search</a>
-      <div id="myfilters" class="filters">
+      <a href="javascript:void(0);" style="font-size:15px;" class="icon" data-bind="click:toggleFilter"><i class="fa fa-search" aria-hidden="true"></i>Filter Search</a>
+      <div id="myfilters" class="filters" data-bind="css:{'responsive': isActive}">
         <input placeholder="Search…" type="search" data-bind="textInput: query, valueUpdate: 'afterkeydown'" autocomplete="off">
         <ul data-bind="template: {name: 'place',foreach: filteredSearch}">
         </ul>
