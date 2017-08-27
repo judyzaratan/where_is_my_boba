@@ -62,9 +62,9 @@ var Pin = function(i, map, title, position, view) {
   */
   this.isVisible.subscribe(function(currentState) {
     if (currentState) {
-      thisMarker.marker.setMap(map);
+      thisMarker.marker.setVisible(true);
     } else {
-      thisMarker.marker.setMap(null);
+      thisMarker.marker.setVisible(false);
     }
   });
 
@@ -74,9 +74,13 @@ var Pin = function(i, map, title, position, view) {
 /*
   View Model for Knockout
 */
-function AppViewModel(map, markers) {
+function AppViewModel(map, markers, bounds) {
 
   var self = this;
+  var center = {
+    lat: 37.764245,
+    lng: -122.423661
+  };
   this.largeInfowindow = new google.maps.InfoWindow();
   this.markers = ko.observableArray(markers);
   this.currentMarker = ko.observable(this.markers()[0]);
@@ -89,6 +93,7 @@ function AppViewModel(map, markers) {
   this.filteredSearch = ko.computed(function() {
     var filter = self.query();
 
+
     // Display all markers if no filter string
     if (!filter) {
       self.markers().forEach(function(item) {
@@ -98,8 +103,14 @@ function AppViewModel(map, markers) {
 
     // Return array of locations that matches string query
     } else {
+      //Close any infowindow open
+      self.largeInfowindow.close();
       return ko.utils.arrayFilter(self.markers(), function(pin) {
         var doesMatch = pin.title.toLowerCase().indexOf(filter.toLowerCase()) > -1;
+        if(doesMatch) {
+          bounds.extend(pin.position);
+          map.fitBounds(bounds);
+        }
         pin.isVisible(doesMatch);
         return doesMatch;
       });
@@ -117,7 +128,6 @@ function AppViewModel(map, markers) {
   });
 
   this.toggleFilter = function(data, event){
-    console.log(data);  
     data.isActive(!data.isActive());
   }
 
@@ -148,7 +158,6 @@ function AppViewModel(map, markers) {
     Gets FourSquare information via AJAX
   */
   this.getMarkerInfo = function(pin) {
-    console.log(pin);
     var CLIENT_ID = "IJ4ZSXNUB5KE4R4JA44HHGEZLIY14RQSRTTINKCQERGC1K0H";
     var CLIENT_SECRET = "XBDJ5CCCAOD4Z0Y1RORM1HXUVNMCWGO5ZYGBVKQGZ5EFMIJI";
 
@@ -186,6 +195,7 @@ function AppViewModel(map, markers) {
     Initiates populating infowindow
   */
   this.populateInfoWindow = function(pin) {
+    self.isActive(false);
     $('#myfilters').removeClass('responsive');
     if (pin !== self.currentMarker()) {
       self.currentMarker().marker.setAnimation(null);
@@ -239,7 +249,7 @@ function initMap() {
   });
 
   // Activate KO with view model
-  ko.applyBindings(new AppViewModel(map, markers));
+  ko.applyBindings(new AppViewModel(map, markers, bounds));
 }
 
 // Executes with Google API has retrieval error
