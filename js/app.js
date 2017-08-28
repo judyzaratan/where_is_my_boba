@@ -86,6 +86,9 @@ function AppViewModel(map, markers, bounds) {
   this.currentMarker = ko.observable(this.markers()[0]);
   this.query = ko.observable("");
   this.isActive = ko.observable(false);
+  this.errMsg = ko.observable('not available');
+
+
 
   /*
     Behavior: Filter locations based on query string
@@ -216,10 +219,10 @@ function AppViewModel(map, markers, bounds) {
   Callback after accessing Google Maps API
 */
 function initMap() {
-
   /*
     Set map information
   */
+
   var bounds = new google.maps.LatLngBounds();
   var markers = [];
   var map = new google.maps.Map(document.getElementById("map"), {
@@ -252,7 +255,8 @@ function initMap() {
   ko.applyBindings(new AppViewModel(map, markers, bounds));
 }
 
+
 // Executes with Google API has retrieval error
 var googleError = function(){
-  $('body').html("ERROR LOADING MAPS");
+  $('#map').text("ERROR LOADING MAPS");
 };
