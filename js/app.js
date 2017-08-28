@@ -132,7 +132,7 @@ function AppViewModel(map, markers, bounds) {
 
   this.toggleFilter = function(data, event){
     data.isActive(!data.isActive());
-  }
+  };
 
 
   /*
